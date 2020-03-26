@@ -2,8 +2,14 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const bodyParser = require('body-parser');
 
 app.use(cors());
+app.use(express.json());
+// support parsing of application/json type post data
+app.use(bodyParser.json());
+//support parsing of application/x-www-form-urlencoded post data
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const plans = [
     { "plan": "basic", "name": "Basic", "cost": 1 },
@@ -12,19 +18,19 @@ const plans = [
     { "plan": "best", "name": "Best", "cost": 1000}
   ];
 
-const currPlan = {
+let currPlan = {
     "plan": 'good',
     "name": 'Good',
     "seats": 5,
     "cost": 10
 };
 
-const prevPlan ={
+let prevPlan = {
     "plan": 'good',
     "name": 'Good',
     "seats": 5,
     "cost": 10
-}
+};
 
 app.get("/api/plans", (req, res) => {
     res.json(plans);
@@ -32,6 +38,10 @@ app.get("/api/plans", (req, res) => {
 
 app.get("/api/current", (req, res) => { 
     res.json(currPlan);
+});
+
+app.get("/api/previous", (req, res) => {
+    res.json(prevPlan);
 });
 
 app.get('/api/cost/:plan', (req, res) => {
@@ -45,18 +55,42 @@ app.get('/api/cost/:plan', (req, res) => {
             return;
         }
     }
+    
 
-    // sending 404 when not found something is a good practice
+    // sending 404 when not found
     res.status(404).send('Plan cost Not Found');
 });
 
-app.post('/api/preview', (req, res) => {
-    const savePlan = req;
-    currPlan = savePlan;
+app.put('/api/current', (req, res, next) => {
+    console.log(req.body);
+    res.send("response");
+    // let planJson = req.body;
+    
+    // res.send(req.body.plan);
+    // let newPlan = {
+    //     plan:  req.body.plan,
+    //     name:  req.body.name,
+    //     seats: req.body.seats,
+    //     cost:  req.body.cost      
+    // }
+    // prevPlan = currPlan;
+    // currPlan = newPlan;
 
-    // sending 404 when not found something is a good practice
-    res.send('Subscription is updated');
+    // res.json(newPlan);
+    // // sending 404 when not found 
+    // // res.status(400).send("Form is missing something");
+    // res.send('Subscription is updated');
 });
+
+// app.get('/api/preview', (req, res)=>{
+//     let showPlan = {
+//         plan:  currPlan.plan,
+//         name:  currPlan.name,
+//         seats: currPlan.seats,
+//         cost: currPlan.seats * currPlan.cost      
+//       }
+//       res.json(showPlan);
+// })
 
 const port = 9000;
 app.listen(port, () => console.log(`Server started on port ${port}`));

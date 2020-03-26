@@ -12,7 +12,13 @@ export default class Form extends React.Component{
             seats: 5,
             cost: 10,
             price: 0,
-            submitted: false
+            submitted: false,
+            disableBtn: true,
+            //for previous
+            pName: "",
+            pPlan: "",
+            pSeats: "",
+            pCost: 0,
         }
         this.handlePlanChange = this.handlePlanChange.bind(this);
         this.handleSeatChange = this.handleSeatChange.bind(this)
@@ -44,7 +50,7 @@ export default class Form extends React.Component{
             this.setState({
                 cost: json,
             }, () => {
-                this.setState({price: this.state.cost * this.state.seats});
+                this.setState({price: this.state.cost * this.state.seats, disableBtn: false});
             });
         }).catch(err => {
           console.log(err);
@@ -57,17 +63,38 @@ export default class Form extends React.Component{
         .then(response => {
           return response.json();
         }).then(json =>{
-        //   console.log("loadcurrplan json: ", json);
            let currTotal = json.cost * this.state.seats;
            let currName = json.name;
            let currPlan = json.plan;
            let planCost = json.cost;
-        //    console.log("currtotal: " + currTotal);
            this.setState({
                name: currName,
                plan: currPlan,
                cost: planCost,
-               price: currTotal
+               price: currTotal,
+           });
+           
+        }).catch(err => {
+          console.log(err);
+        })
+    }
+
+    loadPreviousPlan() {
+        fetch("http://localhost:9000/api/previous")
+        .then(response => {
+          return response.json();
+        }).then(json =>{
+           let prevTotal = json.cost * json.seats;
+           let prevName = json.name;
+           let prevPlan = json.plan;
+           let prevCost = json.cost;
+           let prevSeats = json.seats;
+           this.setState({
+               pName: prevName,
+               pPlan: prevPlan.charAt(0).toUpperCase() + prevPlan.slice(1),
+               pCost: prevCost,
+               pSeats: prevSeats,
+               pPrice: prevTotal,
            });
            
         }).catch(err => {
@@ -92,31 +119,43 @@ export default class Form extends React.Component{
 
     //when the seat is changed, update the cost and price
     handleSeatChange = (e) => {
-        // console.log("num of seats: " + e.target.value);
         let seatNum = e.target.value;
+        // if (seatNum !== Number(seatNum)) {
+        //     this.setState({
+        //         [e.target.name]: e.target.value,
+        //         price: "Enter valid number"
+        //     })
+        // }
         let currCost = this.state.cost;
         this.setState({
             [e.target.name]: e.target.value,
             price: seatNum * currCost,
+            disableBtn: false
         })
     }
 
     //PUT req to /api/current to update the current
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log(this.state);
+        // console.log(JSON.stringify(this.state));
+        this.loadPreviousPlan();
         this.setState({
             submitted: true
         })
         const data = new FormData(e.target);
-        // for (var value of data.values()) {
-        //     console.log(value); 
-        //  }
-        fetch('http://localhost:9000/api/preview', {
+        fetch('http://localhost:9000/api/current', {
             method: 'PUT',
-            body: this.state
+            headers:{
+                "Content-Type": "application/json"
+            },
+            body: JSON.parse(JSON.stringify(this.state).replace(/\\n\\t/g, ''))
         }).then(response => {
-            console.log(response);
+            return response;
+        }).then(json => {
+            console.log("json: ");
+            console.log("- - - - - - -");
+            console.log(json);
+            console.log("- - - - - - -");
         }).catch(error => {
             console.log(error);
         });
@@ -124,12 +163,13 @@ export default class Form extends React.Component{
 
     backToForm = (e) =>{
         this.setState({
-            submitted: false
+            submitted: false,
+            disableBtn: true
         })
     }
 
     render(){
-        const { plan, seats, cost, price, submitted } = this.state;
+        const { plan, seats, cost, price, submitted, disableBtn, pPlan, pSeats, pPrice } = this.state;
 
         console.log("submitted?: " + submitted);
         //e.target.value will change to what ever the usr typed
@@ -140,36 +180,40 @@ export default class Form extends React.Component{
                         <div className="previous">
                             <h4>Previous Subscription</h4>
                             <table>
-                                <tr>
-                                    <td className="category">Plan</td>
-                                    <td>{plan}</td>
-                                </tr>
-                                <tr>
-                                    <td className="category">Seats</td>
-                                    <td>{seats}</td>
-                                </tr>
-                                <tr>
-                                    <td className="category">Total</td>
-                                    <td>${price}</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td className="category">Plan</td>
+                                        <td>{pPlan}</td>
+                                    </tr>
+                                    <tr>
+                                        <td className="category">Seats</td>
+                                        <td>{pSeats}</td>
+                                    </tr>
+                                    <tr>
+                                        <td className="category">Total</td>
+                                        <td>${pPrice}</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
             
                         <div className="new">
                             <h4>Updated Subscription</h4>
                             <table>
-                                <tr>
-                                    <td className="category">Plan</td>
-                                    <td>{plan.charAt(0).toUpperCase() + plan.slice(1)}</td>
-                                </tr>
-                                <tr>
-                                    <td className="category">Seats</td>
-                                    <td>{seats}</td>
-                                </tr>
-                                <tr>
-                                    <td className="category">Total</td>
-                                    <td>${price}</td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td className="category">Plan</td>
+                                        <td>{plan.charAt(0).toUpperCase() + plan.slice(1)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td className="category">Seats</td>
+                                        <td>{seats}</td>
+                                    </tr>
+                                    <tr>
+                                        <td className="category">Total</td>
+                                        <td>${price}</td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                         <button className="back" onClick={this.backToForm}>Back</button>
@@ -187,16 +231,16 @@ export default class Form extends React.Component{
                                     ))}
                                 </select>
                             </div>
-                            <p className="cost">{cost}</p>
+                            <input className="cost" value={cost} />
                             <div className="seats-field">
                                 <label>Seats</label>
                                 <input type="text" name="seats" value={seats} onChange={e => this.handleSeatChange(e)} />
                             </div>
                             <div className="price-field">
-                                <label>Total Price</label>
+                                <label>Total Price (USD $)</label>
                                 <input name="price" value={price} disabled/>
                             </div>
-                            <button type="submit" className="sub-btn" disabled={!seats}>Update</button>
+                            <button type="submit" className="sub-btn" disabled={!seats || disableBtn}>Update</button>
                         </form>
                     </section>
                 )}
