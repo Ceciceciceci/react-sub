@@ -1,37 +1,163 @@
+$gray: #1d1d1d;
+
+////////////////////////////
+/////   THE SUB FORM   /////
+////////////////////////////
+h2{
+    font-size: 25px;
+    text-align: center;
+    padding:15px;
+}
+.line{
+    height: 1px; background-color: #ffbe85; width: 100%;
+}
 form{
-    box-shadow: 0px 0px 5px #ddd;
-    position: absolute;
-    top:50%;
-    left:50%;
-    transform: translate(-50%, -50%);
-    // padding:50px;
-    // // background-color: #fff;
-    // display: grid;
-    // grid-template-columns: 1fr 1fr;
-    // grid-template-areas: 
-    // "plan seat price"
-    // "* btn btn"
+    background-color: white;
+    padding:25px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas: 
+    "plan seat price"
+    "btn btn btn";
+    grid-gap: 15px;
+    align-content: center;
 }
 
-// .plan-field{
-//     grid-area: plan;
-// }
+label{
+    color: #c15b03;
+    width: 100%;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+.plan-field{
+   grid-area: plan;
+   text-align: center;
+    select{
+        margin-top: 15px;
+        width: 100%;
+        height: 40px;
+        padding:15px;
+    }
+}
 
-// .seats-field{
-//     grid-area: seat;
-// }
+.seats-field{
+    grid-area: seat;
+    text-align: center;
+    input{
+        margin-top: 15px;
+        text-align: center;
+        border: 1px solid #aaa;
+        border-radius: 5px;
+        width: 100%;
+        height: 40px;
+        padding:15px;
 
-// .price-field{
-//     grid-area: price;
-// }
+    }
+}
+
+.price-field{
+    grid-area: price;
+    text-align: center;
+    input{
+        margin-top: 15px;
+        border:none;
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 25px;
+
+        &::before {
+            content:'$';
+        }
+    }
+}
 
 .sub-btn{
-    // grid-area: btn;
-    width: 100%;
-    height: 50px;
-    background-color: #1d1d1d ;
-    color: #eee;
-    border: 1px solid #1d1d1d;
-    border-radius: 4px;
+    grid-area: btn;
+    font-size: 18px;
+    letter-spacing: 2px;
+    font-weight: bold;
+    margin-top:20px;
 }
 
+.sub-btn{
+    width: 100%;
+    height: 40px;
+    background-color: $gray ;
+    color: #eee;
+    border: 1px solid $gray;
+    border-radius: 5px;
+}
+
+.sub-btn:hover{
+    cursor: pointer;
+}
+
+.sub-btn:disabled,
+.sub-btn[disabled]{
+  border: 1px solid #999999;
+  background-color: #1f1f1f;
+  color: #666666;
+  cursor: not-allowed;
+}
+
+.cost{
+    visibility: hidden;
+}
+
+
+////////////////////////////
+///// THE PREVIEW PAGE /////
+////////////////////////////
+.preview-page{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas: 
+    "prev new"
+    "btn btn";
+    padding: 25px;
+
+    h4{
+        margin-bottom:15px;
+        font-size: 20px;
+    }
+}
+
+.previous{
+    grid-area: prev;
+}
+.new{
+    grid-area: new;
+}
+.previous, .new{
+    height: 100%;
+    margin:10px;
+    padding:15px;
+    border:1px solid #dddddd;
+    border-radius: 4px;
+    box-shadow: 0px 0px 5px #dddddd;
+}
+.category{
+    color: #c15b03;
+    font-weight: bold;
+}
+td{
+    padding: 5px 25px 5px 0px;
+}
+
+.back{
+    grid-area: btn;
+    height: 40px;
+    margin-right: 25px;
+    width: 75px;
+    background-color: $gray;
+    color: #eee;
+    border: 1px solid $gray;
+    border-radius: 4px;
+    cursor: pointer;
+    position: absolute;
+    bottom:20px;
+    right:10px;
+}

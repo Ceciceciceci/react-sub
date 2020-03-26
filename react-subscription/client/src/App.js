@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import './App.scss';
 import Form from './component/Form';
-import SubDash from './component/SubDash';
 let baseURL = "http://localhost:9000";
 
 class App extends Component {
@@ -17,7 +16,6 @@ class App extends Component {
     return (
       <div className="App">
         <Form baseURL={baseURL} />
-        <SubDash />
       </div>
     );
   }

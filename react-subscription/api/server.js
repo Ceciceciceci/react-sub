@@ -12,18 +12,25 @@ const plans = [
     { "plan": "best", "name": "Best", "cost": 1000}
   ];
 
+const currPlan = {
+    "plan": 'good',
+    "name": 'Good',
+    "seats": 5,
+    "cost": 10
+};
+
+const prevPlan ={
+    "plan": 'good',
+    "name": 'Good',
+    "seats": 5,
+    "cost": 10
+}
+
 app.get("/api/plans", (req, res) => {
     res.json(plans);
 });
 
-app.get("/api/current", (req, res) => {
-    const currPlan = {
-            "plan": 'good',
-            "name": 'Good',
-            "seats": 5,
-            "cost": 10
-        };
-  
+app.get("/api/current", (req, res) => { 
     res.json(currPlan);
 });
 
@@ -43,15 +50,12 @@ app.get('/api/cost/:plan', (req, res) => {
     res.status(404).send('Plan cost Not Found');
 });
 
-app.get("/api/previous", (req, res) => {
-    const prevPlan = {
-            "plan": 'good',
-            "name": 'Good',
-            "seats": 5,
-            "cost": 10
-        };
-  
-    // res.json(currPlan);
+app.post('/api/preview', (req, res) => {
+    const savePlan = req;
+    currPlan = savePlan;
+
+    // sending 404 when not found something is a good practice
+    res.send('Subscription is updated');
 });
 
 const port = 9000;
