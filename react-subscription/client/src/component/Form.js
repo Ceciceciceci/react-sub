@@ -120,12 +120,6 @@ export default class Form extends React.Component{
     //when the seat is changed, update the cost and price
     handleSeatChange = (e) => {
         let seatNum = e.target.value;
-        // if (seatNum !== Number(seatNum)) {
-        //     this.setState({
-        //         [e.target.name]: e.target.value,
-        //         price: "Enter valid number"
-        //     })
-        // }
         let currCost = this.state.cost;
         this.setState({
             [e.target.name]: e.target.value,
@@ -137,28 +131,24 @@ export default class Form extends React.Component{
     //PUT req to /api/current to update the current
     handleSubmit = (e) => {
         e.preventDefault();
-        // console.log(JSON.stringify(this.state));
-        this.loadPreviousPlan();
         this.setState({
             submitted: true
         })
-        const data = new FormData(e.target);
         fetch('http://localhost:9000/api/current', {
             method: 'PUT',
             headers:{
                 "Content-Type": "application/json"
             },
-            body: JSON.parse(JSON.stringify(this.state).replace(/\\n\\t/g, ''))
+            body: JSON.stringify(this.state)
         }).then(response => {
+            console.log(response);
             return response;
         }).then(json => {
-            console.log("json: ");
-            console.log("- - - - - - -");
             console.log(json);
-            console.log("- - - - - - -");
         }).catch(error => {
             console.log(error);
         });
+        this.loadPreviousPlan();
     }
 
     backToForm = (e) =>{

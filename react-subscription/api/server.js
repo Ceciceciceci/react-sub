@@ -62,24 +62,19 @@ app.get('/api/cost/:plan', (req, res) => {
 });
 
 app.put('/api/current', (req, res, next) => {
-    console.log(req.body);
-    res.send("response");
     // let planJson = req.body;
     
     // res.send(req.body.plan);
-    // let newPlan = {
-    //     plan:  req.body.plan,
-    //     name:  req.body.name,
-    //     seats: req.body.seats,
-    //     cost:  req.body.cost      
-    // }
-    // prevPlan = currPlan;
-    // currPlan = newPlan;
+    const newPlan = {
+        plan:  req.body.plan,
+        name:  req.body.name,
+        seats: req.body.seats,
+        cost:  req.body.cost      
+    }
+    prevPlan = currPlan;
+    currPlan = newPlan;
 
-    // res.json(newPlan);
-    // // sending 404 when not found 
-    // // res.status(400).send("Form is missing something");
-    // res.send('Subscription is updated');
+    res.json(newPlan);
 });
 
 const port = 9000;
