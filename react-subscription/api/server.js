@@ -32,18 +32,22 @@ let prevPlan = {
     "cost": 10
 };
 
+//get all plan data 
 app.get("/api/plans", (req, res) => {
     res.json(plans);
 });
 
+//grab the current plan
 app.get("/api/current", (req, res) => { 
     res.json(currPlan);
 });
 
+//grab the previous plan
 app.get("/api/previous", (req, res) => {
     res.json(prevPlan);
 });
 
+//get the cost of each plan
 app.get('/api/cost/:plan', (req, res) => {
     // reading plan name from the URL
     const selPlan = req.params.plan;
@@ -55,16 +59,12 @@ app.get('/api/cost/:plan', (req, res) => {
             return;
         }
     }
-    
-
     // sending 404 when not found
-    res.status(404).send('Plan cost Not Found');
+    // res.status(404).send('Plan cost Not Found');
 });
 
+//PUT request to current to save subscription and replace the prev with the last current plan
 app.put('/api/current', (req, res, next) => {
-    // let planJson = req.body;
-    
-    // res.send(req.body.plan);
     const newPlan = {
         plan:  req.body.plan,
         name:  req.body.name,
@@ -75,6 +75,8 @@ app.put('/api/current', (req, res, next) => {
     currPlan = newPlan;
 
     res.json(newPlan);
+    // sending 404 when not subscription new could not be saved
+    // res.status(404).send('Plan could not be saved');
 });
 
 const port = 9000;

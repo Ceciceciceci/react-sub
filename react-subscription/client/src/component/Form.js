@@ -25,7 +25,10 @@ export default class Form extends React.Component{
         this.handleSubmit = this.handleSubmit.bind(this);
         this.backToForm = this.backToForm.bind(this);
     }
-    
+
+    // /////////////////// //
+    // LOAD DATA SECTION   //
+    // /////////////////// //
     loadPlans(baseURL) {
         fetch(baseURL + "/api/plans")
         .then(response => {
@@ -34,7 +37,6 @@ export default class Form extends React.Component{
            this.setState({
                plans: json
            });
-           console.log('loadplans json', this.state.plans);
         }).catch(err => {
           console.log(err);
         })
@@ -46,7 +48,6 @@ export default class Form extends React.Component{
         .then(response => {
           return response.json();
         }).then(json =>{
-            // console.log("load cost: " + json);
             this.setState({
                 cost: json,
             }, () => {
@@ -57,7 +58,7 @@ export default class Form extends React.Component{
         })
     }
 
-    // //GET Current plan
+    //GET Current plan
     loadCurrentPlan(baseURL) {
         fetch(baseURL + "/api/current")
         .then(response => {
@@ -78,7 +79,7 @@ export default class Form extends React.Component{
           console.log(err);
         })
     }
-
+    //GET previous plan
     loadPreviousPlan() {
         fetch("http://localhost:9000/api/previous")
         .then(response => {
@@ -101,12 +102,17 @@ export default class Form extends React.Component{
           console.log(err);
         })
     }
-
+    // /////////////////// //
+    // MOUNTING REQ        //
+    // /////////////////// //
     componentDidMount(){
         this.loadPlans(this.props.baseURL);
         this.loadCurrentPlan(this.props.baseURL);
     }
 
+    // /////////////////// //
+    // FUNCTIONS SECTION   //
+    // /////////////////// //
     //when the plan is changed, update the cost and price
     handlePlanChange = (e) => {
         let planName = e.target.value;
@@ -151,6 +157,7 @@ export default class Form extends React.Component{
         this.loadPreviousPlan();
     }
 
+    // click on the back button 
     backToForm = (e) =>{
         this.setState({
             submitted: false,
@@ -158,11 +165,11 @@ export default class Form extends React.Component{
         })
     }
 
+    // /////////////////// //
+    // RENDER PAGE         //
+    // /////////////////// //
     render(){
         const { plan, seats, cost, price, submitted, disableBtn, pPlan, pSeats, pPrice } = this.state;
-
-        console.log("submitted?: " + submitted);
-        //e.target.value will change to what ever the usr typed
         return(
             <section>
                 { submitted ? (
